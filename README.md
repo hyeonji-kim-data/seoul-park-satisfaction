@@ -1,21 +1,21 @@
 # Assessing Park Satisfaction through Data Integration and Correlation Analysis in R
 
-Combined three public datasets on Seoul's 25 districts to test whether more park area per person leads to higher green-space satisfaction, and found **no meaningful relationship in any of four years (2021–2024)**.
+Combined three public datasets covering Seoul’s 25 districts to test whether greater park area per capita is associated with higher satisfaction with urban green spaces. Found no meaningful relationship in any of the four years analyzed.
 
 - **Type:** Course project (individual), 2022; reanalyzed in 2026
 - **Tools:** R (dplyr, tidyr, ggplot2)
-- **Methods:** data integration, Spearman rank correlation, change analysis
+- **Methods:** data integration, Spearman rank correlation
 - **Portfolio page:** [link]
 
 ---
 
 ## 1. Goal
 
-Korean law sets a standard of 6 m² of city park per person, and park policy is often judged by how much park area a district has. But more park area does not necessarily mean residents are more satisfied with their green space. Using public data on Seoul's 25 districts from 2021 to 2024, this project asked:
+Korean law sets a standard of 6 m² of urban parkland per person, and park policy is often evaluated based on the amount of parkland available in each district. However, more parkland does not necessarily mean greater resident satisfaction with green spaces. Using public data from Seoul’s 25 districts from 2021 to 2024. This project asked:
 
-1. Which districts fall short of the legal standard of 6 m² of city park per person?
-2. Are residents more satisfied with green space in districts with more park area per person?
-3. Did satisfaction rise in districts where park area grew?
+1. Which districts fall below the standard of 6 m² of urban parkland per capita?
+2. Are residents more satisfied with green spaces in districts with more parkland per capita?
+3. Did resident satisfaction increase in districts where parkland area grew?
 
 **Background:** I first planned this analysis in a 2022 landscape information course using 2021 data. I later rebuilt it in R and extended it to four years to see whether the results held over time.
 
@@ -25,14 +25,14 @@ Three public datasets from the [Seoul Open Data Plaza](https://data.seoul.go.kr)
 
 | File | Dataset | Used |
 |---|---|---|
-| `park_rate_2124.csv` | Seoul park statistics: park ratio | District area, park area |
-| `park_per_2124.csv` | Seoul park statistics: park area per person | **City park area per person (m²)** |
-| `satis_2124.csv` | Seoul regional satisfaction survey: green space | **Share of residents satisfied (%)** |
+| `park_rate.csv` | Seoul park statistics: park ratio | District area, park area |
+| `park_per.csv` | Seoul park statistics: park area per person | **City park area per person (m²)** |
+| `satisfaction.csv` | Seoul regional satisfaction survey: green space | **Share of residents satisfied (%)** |
 
 **Measures**
-- **Park area:** city park area per person (m²), compared with the 6 m² legal standard.
-- **Satisfaction:** the share of residents who answered "somewhat satisfied" or "very satisfied" with green space (%), rounded to one decimal place so that equal values get the same rank.
-
+- **Park area:** ark area per capita (m²) assessed against the 6 m² standard.
+- **Satisfaction:** the percentage of residents who were somewhat or very satisfied with green spaces.
+- 
 ## 3. Data integration
 
 The downloaded tables have multi-row headers (year in the first row, items in the next rows). The function `read_stat()` reshapes each table into one row per district and year, then the three tables are joined by district and year.
@@ -57,7 +57,7 @@ The downloaded tables have multi-row headers (year in the first row, items in th
 | 5 | Change in park area vs. change in satisfaction (2021 → 2024) | Spearman rank correlation |
 | 6 | Figures | ggplot2 |
 
-**Why Spearman:** it compares districts by rank rather than raw value. A few districts, such as Jongno-gu (about 41 m² per person in 2021, against a district median of 8.6 m²), have extremely large park areas that would dominate a regular (Pearson) correlation.
+**Why Spearman:** it compares districts by rank rather than raw value. Calculated Spearman rank correlations for each year to reduce sensitivity to extreme values in districts such as Jongno-gu, and compared changes in park area and satisfaction from 2021 to 2024.
 
 ## 5. Results
 
@@ -135,9 +135,9 @@ Tested with R 4.3.3 (dplyr 1.1.4, tidyr 1.3.1, ggplot2 3.4.4).
 ├── README.md
 ├── green_analysis.R                 # all steps, prints results and saves figures
 ├── data/
-│   ├── park_rate_2124.csv           # raw: park ratio
-│   ├── park_per_2124.csv            # raw: park area per person
-│   ├── satis_2124.csv               # raw: green-space satisfaction
+│   ├── park_rate.csv           # raw: park ratio
+│   ├── park_per.csv            # raw: park area per person
+│   ├── satis.csv               # raw: green-space satisfaction
 │   └── green_merged.csv             # created by the script
 └── figures/
     ├── 01_citypark_per_2021.png
